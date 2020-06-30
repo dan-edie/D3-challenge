@@ -34,7 +34,7 @@ d3.csv("assets/data/data.csv").then(function(demoData, err) {
 
     // create scale functions
     var xLinearScale = d3.scaleLinear()
-        .domain([8, d3.max(demoData, d => d.poverty)])
+        .domain([d3.min(demoData, d => d.poverty) - 2, d3.max(demoData, d => d.poverty)])
         .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
@@ -42,7 +42,6 @@ d3.csv("assets/data/data.csv").then(function(demoData, err) {
         .range([height, 0]);
 
     // create the axis functions
-
     var bottomAxis = d3.axisBottom(xLinearScale);
     var leftAxis = d3.axisLeft(yLinearScale);
 
@@ -66,14 +65,15 @@ d3.csv("assets/data/data.csv").then(function(demoData, err) {
         .attr("opacity" , "0.5");
 
     // add the state abbreviations to the plotted data
-    var stateAbbr = chartGroup.selectAll("text")
+    var stateAbbr = chartGroup.selectAll("null")
         .data(demoData)
         .enter()
         .append("text")
         .text(d => d.abbr)
-        .attr("x", d => (xLinearScale(d.poverty) - 7))
-        .attr("y", d => (yLinearScale(d.healthcare) + 4))
-        .attr("font-size", "11px");
+        .attr("x", d => (xLinearScale(d.poverty)))
+        .attr("y", d => (yLinearScale(d.healthcare)))
+        .attr("text-anchor", "middle")
+        .attr("font-size", "10px");
 
     // create axes labels
     chartGroup.append("text")
@@ -84,12 +84,12 @@ d3.csv("assets/data/data.csv").then(function(demoData, err) {
         .attr("class", "axisText")
         .attr("font-size", "18px")
         .attr("font-weight", "bold")
-        .text("Lacks Healthcare (%)")
+        .text("Lacks Healthcare (%)");
 
     chartGroup.append("text")
         .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
         .attr("class", "axisText")
         .text("In Poverty (%)")
         .attr("font-size", "18px")
-        .attr("font-weight", "bold")
+        .attr("font-weight", "bold");
 });
